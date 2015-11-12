@@ -48,9 +48,13 @@ class TabBarNavigator extends Component {
       LeftButton(route, navigator, index, navState) {
         if (!route.isRoot) {
           if (route.navItems && route.navItems.leftItem) {
-            return React.cloneElement(route.navItems.leftItem.component, {
-              onPress: () => {route.navItems.leftItem.event(self.popThisNavigator.bind(self, navigator))}
-            });
+            var onPress = route.navItems.leftItem.event ? {
+              onPress: () => {
+                route.navItems.leftItem.event();
+                self.popThisNavigator(navigator);
+              }
+            } : {};
+            return React.cloneElement(route.navItems.leftItem.component, onPress);
           }
           else {
             return (
@@ -66,24 +70,34 @@ class TabBarNavigator extends Component {
           var navItems = self.rootNavigatorItems;
           var currentIndex = self.currentTabIndex;
           if (navItems[currentIndex] && navItems[currentIndex].leftItem) {
-            return React.cloneElement(navItems[currentIndex].leftItem.component, {
-              onPress: () => {navItems[currentIndex].leftItem.event(self.popThisNavigator.bind(self, navigator))}
-            });
+            var onPress = navItems[currentIndex].leftItem.event ? {
+              onPress: () => {
+                navItems[currentIndex].leftItem.event();
+                self.popThisNavigator(navigator);
+              }
+            } : {};
+            return React.cloneElement(navItems[currentIndex].leftItem.component, onPress);
           }
         }
       },
       RightButton(route, navigator, index, navState) {
         if (!route.isRoot) {
           if (route.navItems && route.navItems.rightItem) {
-            return React.cloneElement(route.navItems.rightItem.component, {
-              onPress: () => {route.navItems.rightItem.event()}
-            });
+            var onPress = route.navItems.rightItem.event ? {
+              onPress: () => { route.navItems.rightItem.event(); }
+            } : {};
+            return React.cloneElement(route.navItems.rightItem.component, onPress);
           }
         }
         else {
           var navItems = self.rootNavigatorItems;
           var currentIndex = self.currentTabIndex;
           if (navItems[currentIndex] && navItems[currentIndex].rightItem) {
+            var onPress = navItems[currentIndex].rightItem.event ? {
+              onPress: () => {
+                navItems[currentIndex].rightItem.event();
+              }
+            } : {};
             return React.cloneElement(navItems[currentIndex].rightItem.component, {
               onPress: () => {navItems[currentIndex].rightItem.event()}
             });
@@ -93,18 +107,20 @@ class TabBarNavigator extends Component {
       Title(route, navigator, index, navState) {
         if (!route.isRoot) {
           if (route.navItems && route.navItems.title) {
-            return React.cloneElement(route.navItems.title.component, {
-              onPress: () => {route.navItems.title.event()}
-            });
+            var onPress = route.navItems.title.event ? {
+              onPress: () => { route.navItems.title.event(); }
+            } : {};
+            return React.cloneElement(route.navItems.title.component, onPress);
           }
         }
         else {
           var navItems = self.rootNavigatorItems;
           var currentIndex = self.state.currentTabIndex;
           if (navItems[currentIndex] && navItems[currentIndex].title) {
-            return React.cloneElement(navItems[currentIndex].title.component, {
-              onPress: () => {navItems[currentIndex].title.event()}
-            });
+            var onPress = navItems[currentIndex].title.event ? {
+              onPress: () => { navItems[currentIndex].title.event(); }
+            }: {};
+            return React.cloneElement(navItems[currentIndex].title.component, onPress);
           }
         }
         return (
@@ -116,7 +132,6 @@ class TabBarNavigator extends Component {
     };
   }
   setNavItems(config) {
-    console.log('setting nav items. currentTabIndex: ' + this.currentTabIndex);
     if (this.currentRoute.isRoot) {
       this.rootNavigatorItems[this.state.currentTabIndex] = config;
       this.forceUpdate();
