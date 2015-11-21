@@ -52,8 +52,9 @@ class TabBarNavigator extends Component {
               onPress: () => {
                 route.navItems.leftItem.event();
                 self.popThisNavigator(navigator);
-              }
-            } : {};
+              },
+              color: self.props.navTintColor
+            } : { color: self.props.navTintColor };
             return React.cloneElement(route.navItems.leftItem.component, onPress);
           }
           else {
@@ -74,8 +75,9 @@ class TabBarNavigator extends Component {
               onPress: () => {
                 navItems[currentIndex].leftItem.event();
                 self.popThisNavigator(navigator);
-              }
-            } : {};
+              },
+              color: self.props.navTintColor
+            } : { color: self.props.navTintColor };
             return React.cloneElement(navItems[currentIndex].leftItem.component, onPress);
           }
         }
@@ -84,8 +86,9 @@ class TabBarNavigator extends Component {
         if (!route.isRoot) {
           if (route.navItems && route.navItems.rightItem) {
             var onPress = route.navItems.rightItem.event ? {
-              onPress: () => { route.navItems.rightItem.event(); }
-            } : {};
+              onPress: () => { route.navItems.rightItem.event(); },
+              color: self.props.navTintColor
+            } : { color: self.props.navTintColor };
             return React.cloneElement(route.navItems.rightItem.component, onPress);
           }
         }
@@ -96,11 +99,10 @@ class TabBarNavigator extends Component {
             var onPress = navItems[currentIndex].rightItem.event ? {
               onPress: () => {
                 navItems[currentIndex].rightItem.event();
-              }
-            } : {};
-            return React.cloneElement(navItems[currentIndex].rightItem.component, {
-              onPress: () => {navItems[currentIndex].rightItem.event()}
-            });
+              },
+              color: self.props.navTintColor
+            } : { color: self.props.navTintColor };
+            return React.cloneElement(navItems[currentIndex].rightItem.component, onPress);
           }
         }
       },
