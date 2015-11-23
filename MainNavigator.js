@@ -35,7 +35,9 @@ class TabBarNavigator extends Component {
 
     this.state = {
       rootNavigatorTitle: '',
-      currentTabIndex: 0
+      currentTabIndex: 0,
+      navigationBarHidden: false,
+      topMargin: 64
     };
     this.navItems = {};
     this.navRouter = {};
@@ -142,6 +144,12 @@ class TabBarNavigator extends Component {
       this.currentRoute.navItems = config;
     }
   }
+  setNavBarHidden(hidden) {
+    this.setState({
+      navigationBarHidden: hidden,
+      topMargin: hidden ? 0 : 64
+    });
+  }
   popThisNavigator(navigator) {
     this.resetNavItems();
     this.forceReRender();
@@ -165,7 +173,7 @@ class TabBarNavigator extends Component {
       navComponent: this
     });
     return (
-      <View style={{flex: 1, marginTop: 64}}>
+      <View style={{flex: 1, marginTop: this.state.topMargin}}>
         {newComponent}
       </View>
     );
@@ -183,9 +191,10 @@ class TabBarNavigator extends Component {
         <MainTabBar {...this.props} initialConfig={this.props.children} onChange={this.props.onChange}/>
       )
     };
+    var navBarHidden = this.state.navigationBarHidden ? { opacity: 0 } : { backgroundColor: this.props.navBarTintColor ? this.props.navBarTintColor : 'rgba(0,0,0,.8)', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' };
     var navBar = (
       <Navigator.NavigationBar
-        style={{backgroundColor: this.props.navBarTintColor ? this.props.navBarTintColor : 'rgba(0,0,0,.8)', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}
+        style={navBarHidden}
         routeMapper={this.navRouter}
         />
     );
