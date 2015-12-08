@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/DickyT/react-native-tabbar-navigator/issues"
   },
-  "homepage": "https://github.com/DickyT/react-native-tabbar-navigator#readme"
+  "homepage": "https://github.com/DickyT/react-native-tabbar-navigator#readme",
+  "dependencies": {
+    "react-native-navbar": "latest"
+  }
 }

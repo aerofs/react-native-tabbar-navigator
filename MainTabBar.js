@@ -3,18 +3,9 @@
 var React = require('react-native');
 var {
   Component,
-  StyleSheet,
-  Text,
-  View,
   TabBarIOS
 } = React;
 
-
-var style = StyleSheet.create({
-  rootView: {
-    flex: 1
-  }
-});
 
 class MainTabBar extends Component {
   constructor(props) {
@@ -24,9 +15,11 @@ class MainTabBar extends Component {
       selectedTab: 0
     };
   }
+
   componentWillMount() {
     this.configureTabBar();
   }
+
   configureTabBar() {
     var defaultTabIndex = 1;
     React.Children.map(this.props.initialConfig, function(eachChild, index) {
@@ -45,18 +38,14 @@ class MainTabBar extends Component {
     this.setState({
       selectedTab: defaultTabIndex
     });
-    this.props.navComponent.currentTabIndex = defaultTabIndex;
   }
+
   switchTab(tabId, tabTitle, currentTabIndex) {
-    this.props.navComponent.currentTabIndex = currentTabIndex;
-    this.props.navComponent.setState({
-      currentTabIndex: currentTabIndex
-    });
-    this.props.navComponent.forceUpdate();
     this.setState({
       selectedTab: tabId
     });
   }
+
   renderTabBarItems() {
     var items = [];
     var self = this;
@@ -64,7 +53,6 @@ class MainTabBar extends Component {
       var eachData = this.tabBarData[i];
       var eachComponent = React.cloneElement(eachData.component, {
         navigator: this.props.navigator,
-        navComponent: this.props.navComponent
       });
       items.push(
         <TabBarIOS.Item
@@ -78,12 +66,13 @@ class MainTabBar extends Component {
     }
     return items;
   }
+
   render() {
     return (
       <TabBarIOS
-        style={style.flexEnabled}
-        tintColor={this.props.tabTintColor}
-        barTintColor={this.props.tabBarTintColor}>
+        style={{flex: 1}}
+        tintColor={this.props.tintColor}
+        barTintColor={this.props.backgroundColor}>
         {this.renderTabBarItems()}
       </TabBarIOS>
     );

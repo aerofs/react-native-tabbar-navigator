@@ -1,5 +1,8 @@
 'use strict';
 
+var NavigationBar = require('react-native-navbar');
+var NavBarButton = require('react-native-navbar').NavBarButton;
+
 import React from 'react-native';
 const {
   Component,
@@ -24,7 +27,7 @@ var style = StyleSheet.create({
   },
   tabContentStyle: {
     flex: 1,
-    backgroundColor: 'ebebeb',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -49,104 +52,40 @@ var style = StyleSheet.create({
   }
 });
 
-class AnotherNewPage extends Component {
-  constructor(props) {
-    super(props);
-    this.props.navComponent.setNavItems({
-      leftItem: {
-        component: (
-          <TouchableOpacity style={[style.navItem, {marginRight: 7}]}>
-            <Image style={{width: 20, height: 20}} source={{uri: shareImg}}/>
-          </TouchableOpacity>
-        ),
-        event: function(popHelper) {
-          popHelper();
-          AlertIOS.alert('The event comes from Left NavBar Item');
-        }.bind(this)
-      },
-      rightItem: {
-        component: (
-          <TouchableOpacity style={[style.navItem, {marginRight: 7}]}>
-            <Image style={{width: 20, height: 20}} source={{uri: shareImg}}/>
-          </TouchableOpacity>
-        ),
-        event: function() {
-          AlertIOS.alert('The event comes from Share Button on NavBar');
-        }.bind(this)
-      },
-      title:{
-        component: (
-          <View
-            style={styles.segmentControlContainer} >
-            <SegmentedControlIOS
-                style={ styles.segmentControl }
-                values={['Pinned', 'All']}
-                selectedIndex={1}
-            />
-          </View>
-        )
-      }
-    });
-  }
-  pushPage() {
-    this.props.navigator.push({
-      title: 'New Page',
-      component: <AnotherNewPage/>
-    });
-  }
-  render() {
-    return (
-      <View style={style.tabContentStyle}>
-        <Text style={style.textStyle}>This is the content of New Page</Text>
-        <Text style={style.textStyle}>You can also set the Bar Item on the Left</Text>
-        <View style={{position: 'absolute', top: 20, right: 10}}>
-          <Text style={style.textStyle}>I also have callback function</Text>
-          <Text style={style.textStyle}>Try to touch me</Text>
-        </View>
-        <Image style={[style.arrowImage, {left: 0, transform:[{rotate: '-135deg'}]}]} source={{uri: arrowImg}}/>
-        <TouchableOpacity onPress={this.pushPage.bind(this)}>
-          <Text style={[style.textStyle, {color: 'rgb(0,122,255)'}]}>Touch to push page infinitely</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-}
-
 class NewPage extends Component {
   constructor(props) {
     super(props);
-    this.props.navComponent.setNavItems({
-      rightItem: {
-        component: (
-          <TouchableOpacity style={[style.navItem, {marginRight: 7}]}>
-            <Image style={{width: 20, height: 20}} source={{uri: shareImg}}/>
-          </TouchableOpacity>
-        ),
-        event: function() {
-          AlertIOS.alert('The event comes from Share Button on NavBar');
-        }.bind(this)
-      }
-    });
   }
-  pushPage() {
-    this.props.navigator.push({
-      title: 'Another New Page',
-      component: <AnotherNewPage/>
-    });
+  _change() {
+    this.props.navigator.pop();
   }
   render() {
+    var leftButton = <TouchableOpacity onPress={this._change.bind(this)}>
+            <Text>Back</Text>
+            </TouchableOpacity>;
+
+    var title = <TouchableOpacity style={[style.navItem, {marginRight: 7}]}>
+            <Text>Another new page</Text>
+          </TouchableOpacity>;
+
     return (
-      <View style={style.tabContentStyle}>
-        <Text style={style.textStyle}>This is the content of New Page</Text>
-        <Text style={style.textStyle}>You can also set the Bar Item on the right</Text>
-        <View style={{position: 'absolute', top: 20, left: 20}}>
-          <Text style={style.textStyle}>I have callback function</Text>
-          <Text style={style.textStyle}>Try to touch me</Text>
+      <View style={{flex: 1}}>
+        <NavigationBar
+                      tintColor={'#f8f8f8'}
+                      style={styles.navBar}
+                      title={ title }
+                      leftButton={leftButton}
+                  />
+
+        <View style={style.tabContentStyle}>
+          <Text style={style.textStyle}>This is the content of New Page</Text>
+          <Text style={style.textStyle}>You can also set the Bar Item on the right</Text>
+          <View style={{position: 'absolute', top: 20, left: 20}}>
+            <Text style={style.textStyle}>I have callback function</Text>
+            <Text style={style.textStyle}>Try to touch me</Text>
+          </View>
+          <Image style={style.arrowImage} source={{uri: arrowImg}}/>
         </View>
-        <Image style={style.arrowImage} source={{uri: arrowImg}}/>
-        <TouchableOpacity onPress={this.pushPage.bind(this)}>
-          <Text style={[style.textStyle, {color: 'rgb(0,122,255)'}]}>Touch to push another new page</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -155,26 +94,39 @@ class NewPage extends Component {
 class TabOne extends Component {
   constructor(props) {
     super(props);
-    this.props.navComponent.setNavItems({
-      title: {
-        component: (
-          <View
-            style={styles.segmentControlContainer} >
-            <SegmentedControlIOS
-                style={ styles.segmentControl }
-                values={['Pinned', 'All']}
-                selectedIndex={1}
-            />
-          </View>
-        ),
-        event: function() {
-          AlertIOS.alert('The event comes from title on NavBar');
-        }.bind(this)
-      }
-    });
+    this.onChange = this.onChange.bind(this)
+    this.state = {
+      title: 'Original Title'
+    };
   }
+
+  _change() {
+    this.state = {
+        title: 'New Title'
+    };
+  }
+
+  onChange(state) {
+    this.setState(state);
+  }
+
   render() {
+    var rightButton = <TouchableOpacity onPress={this._change}>
+            <Text>Change</Text>
+            </TouchableOpacity>;
+
+    var title = <TouchableOpacity style={[style.navItem, {marginRight: 7}]}>
+            <Text>{this.state.title}</Text>
+          </TouchableOpacity>;
+
     return (
+      <View style={{flex: 1}}>
+      <NavigationBar
+                    tintColor={'#f8f8f8'}
+                    style={styles.navBar}
+                    title={ title }
+                    rightButton={rightButton}
+                />
       <View style={style.tabContentStyle}>
             <Text style={style.textStyle}>This is the content of Tab 1</Text>
             <Text style={style.textStyle}>Automatically marginTop = 64</Text>
@@ -182,6 +134,7 @@ class TabOne extends Component {
             <Text style={style.textStyle}>You can wrap everything inside {'<View></View>'}</Text>
             <Text style={style.textStyle}>Slide to back is fully supported</Text>
       </View> 
+      </View>
     );
   }
 }
@@ -189,18 +142,6 @@ class TabOne extends Component {
 class TabTwo extends Component {
   constructor(props) {
     super(props);
-    this.props.navComponent.setNavItems({
-      title: {
-        component: (
-          <TouchableOpacity style={[style.navItem, {marginRight: 7}]}>
-            <Image style={{width: 20, height: 20}} source={{uri: shareImg}}/>
-          </TouchableOpacity>
-        ),
-        event: function() {
-          AlertIOS.alert('The event comes from title on NavBar');
-        }.bind(this)
-      }
-    });
   }
   pushPage() {
     this.props.navigator.push({
@@ -209,18 +150,38 @@ class TabTwo extends Component {
     });
   }
   render() {
+    var title = <View
+          style={styles.segmentControlContainer} >
+          <SegmentedControlIOS
+              style={ styles.segmentControl }
+              values={['One', 'Two']}
+              selectedIndex={1}
+          />
+        </View>;
+    var rightButton = <TouchableOpacity onPress={this.pushPage.bind(this)}>
+            <Text>Change</Text>
+            </TouchableOpacity>;
+
     return (
-      <View style={style.tabContentStyle}>
-        <Image style={[style.arrowImage, {left: 50, top: -50, transform:[{rotate: '-75deg'},{scale: .5}]}]} source={{uri: arrowImg}}/>
-        <Text style={[style.textStyle, {marginTop: -50, marginBottom: 50}]}>Title bar can be customized with click event</Text>
-        <Text style={style.textStyle}>This is the content of Tab 2</Text>
-        <Text style={[style.textStyle, {marginBottom: 0}]}>A good implementation of</Text>
-        <Text style={style.textStyle}>hidesBottomBarWhenPushed</Text>
-        <Text style={style.textStyle}>Set as default by passing Props 'defaultTab'</Text>
-        <TouchableOpacity onPress={this.pushPage.bind(this)}>
-          <Text style={[style.textStyle, {color: 'rgb(0,122,255)'}]}>Try to push a new page</Text>
-        </TouchableOpacity>
-        <Text style={style.textStyle}>And see the magic on the TabBar</Text>
+      <View style={{flex: 1}}>
+        <NavigationBar
+                      tintColor={'#f8f8f8'}
+                      style={styles.navBar}
+                      title={ title }
+                      rightButton={rightButton}
+                  />    
+        <View style={style.tabContentStyle}>
+          <Image style={[style.arrowImage, {left: 50, top: -50, transform:[{rotate: '-75deg'},{scale: .5}]}]} source={{uri: arrowImg}}/>
+          <Text style={[style.textStyle, {marginTop: -50, marginBottom: 50}]}>Title bar can be customized with click event</Text>
+          <Text style={style.textStyle}>This is the content of Tab 2</Text>
+          <Text style={[style.textStyle, {marginBottom: 0}]}>A good implementation of</Text>
+          <Text style={style.textStyle}>hidesBottomBarWhenPushed</Text>
+          <Text style={style.textStyle}>Set as default by passing Props 'defaultTab'</Text>
+          <TouchableOpacity onPress={this.pushPage.bind(this)}>
+            <Text style={[style.textStyle, {color: 'rgb(0,122,255)'}]}>Try to push a new page</Text>
+          </TouchableOpacity>
+          <Text style={style.textStyle}>And see the magic on the TabBar</Text>
+        </View>
       </View>
     );
   }
@@ -230,10 +191,8 @@ class TabBarNavigatorExample extends Component {
   render() {
     return (
       <TabBarNavigator
-        navTintColor='ffffff'
-        navBarTintColor='333333'
-        tabTintColor='orange'
-        tabBarTintColor='333333'
+        tintColor='blue'
+        backgroundColor='yellow'
         onChange={(index)=>console.log(`selected index ${index}`)}>
         <TabBarNavigator.Item title='First' icon={{uri: base64Icon, scale: 3}} defaultTab>
           <TabOne />
@@ -254,7 +213,20 @@ var styles = StyleSheet.create({
     },
     segmentControl: {
         width: 160
-    }
+    },
+    navBar: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd'
+    },
+        segmentControlContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    segmentControl: {
+        width: 160
+    },
+
 });
 
 React.AppRegistry.registerComponent('TabBarNavigatorExample', () => TabBarNavigatorExample);

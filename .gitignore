@@ -1,0 +1,42 @@
+# external libraries
+node_modules
+npm-debug.log
+
+# packaged output
+build
+dist
+*.bundle
+
+# compiled JS
+*-compiled.js
+*.js.map
+
+# IntelliJ
+.idea
+
+# Mac desktop file
+.DS_Store
+
+# Xcode
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+
+# Android
+.gradle
+
+# React Native iOS
+main.jsbundle
