@@ -20,9 +20,7 @@ class TabBarNavigator extends Component {
       navigator: navigator,
     });
 
-    return (
-        {newComponent}
-    );
+    return newComponent;
   }
 
   render() {
