@@ -28,7 +28,8 @@ class MainTabBar extends Component {
         title: eachChild.props.title,
         icon: eachChild.props.icon,
         selectedIcon: eachChild.props.selectedIcon,
-        component: eachChild.props.children
+        component: eachChild.props.children,
+        onPress: eachChild.props.onPress
       };
       this.tabBarData.push(eachTabBarData);
 
@@ -41,10 +42,11 @@ class MainTabBar extends Component {
     });
   }
 
-  switchTab(tabId, tabTitle, currentTabIndex) {
+  switchTab(eachData) {
     this.setState({
-      selectedTab: tabId
+      selectedTab: eachData.id
     });
+    eachData.onPress && eachData.onPress();
   }
 
   renderTabBarItems() {
@@ -62,7 +64,8 @@ class MainTabBar extends Component {
           icon={eachData.icon}
           selectedIcon={eachData.selectedIcon}
           selected={self.state.selectedTab === eachData.id}
-          onPress={self.switchTab.bind(self, eachData.id, eachData.title, i)}>
+          onPress={ this.switchTab.bind(this, eachData) }
+          >
           {eachComponent}
         </TabBarIOS.Item>
       );
